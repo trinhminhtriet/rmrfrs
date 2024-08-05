@@ -43,7 +43,9 @@ Requires [rust](https://www.rust-lang.org/tools/install).
 
 ```sh
 git clone https://github.com/trinhminhtriet/rmrfrs.git
-cargo install --path rmrfrs/rmrfrs-ui
+cd rmrfrs
+cargo install --path rmrfrs
+cargo install --path rmrfrs-ui
 ```
 
 ## Usage
