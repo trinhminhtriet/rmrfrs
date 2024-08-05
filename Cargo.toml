@@ -1,0 +1,8 @@
+[workspace]
+members = ["rmrfrs", "rmrfrs-lib"]
+exclude = ["rmrfrs-ui"]
+resolver = "2"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

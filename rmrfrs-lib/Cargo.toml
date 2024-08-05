@@ -1,0 +1,13 @@
+[package]
+name = "rmrfrs-lib"
+version = "0.8.0"
+authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
+edition = "2021"
+description = "Shared code lib for rmrfrs and rmrfrs-ui."
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ignore = "0.4.18"
+walkdir = "2"
