@@ -1,14 +1,6 @@
 # rmrfrs 🧹
 
-## rm -rf in Rust
-
-Cleans `node_modules`, `target`, `build`, and friends from your projects.
-
-Excellent if
-
-- 💾 You want to back up your code but don't want to include GBs of dependencies
-- 🧑‍🎨 You try out lots of projects but hate how much space they occupy
-- ⚡️ You like keeping your disks lean and zippy
+rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
 
 <br />
 
@@ -47,7 +39,7 @@ Excellent if
 
 **Source**
 
-Requires [rust](https://www.rust-lang.org/tools/install). You may need [platform specific dependencies on linux](https://github.com/xi-editor/druid#platform-notes).
+Requires [rust](https://www.rust-lang.org/tools/install).
 
 ```sh
 git clone https://github.com/trinhminhtriet/rmrfrs.git
@@ -62,31 +54,11 @@ cargo install --path rmrfrs/rmrfrs-ui
 
 ### Command Line Interface
 
-Running `rmrfrs` without a directory specified will run in the current directory.
-
 ```sh
-rmrfrs
-```
-
-Supplying a path will tell `rmrfrs` where to start. Multiple paths are supported.
-
-```sh
+rmrfrs --help
 rmrfrs code/my_project code/my_project_2
-```
-
-Passing a time will filter projects to those that haven't been modified for at least the specified period. See `rmrfrs --help` for the full list of options.
-
-```sh
-rmrfrs --older 3M # only projects with last modified greater than 3 months
+rmrfrs --older 3M # only projects with last modified > 3 months
 rmrfrs -o3M # shorthand
 ```
-
-More options such as quiet mode, following symlinks, and filesystem restriction are viewable with `rmrfrs --help`.
-
-## Building/Development
-
-To build the cli `rmrfrs` you can run `cargo build` and `cargo run` from the projects root directory.
-
-To build the gui `rmrfrs-ui` you must first navigate into the `rmrfrs-ui` directory, then you can run `cargo build` and `cargo run`.
 
 The output binaries will be located in `target/debug/` or `target/release/` per [Cargo](https://doc.rust-lang.org/cargo/index.html) defaults.
