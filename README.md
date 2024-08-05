@@ -1,6 +1,6 @@
-# rmrfrs 🧹
+# 🧹 rmrfrs
 
-rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
+🧹 rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
 
 <br />
 
