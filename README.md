@@ -2,8 +2,6 @@
 
 🧹 rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
 
-<br />
-
 <p align="center">
     <strong>20+ Supported Project Types</strong>
 </p>
@@ -37,30 +35,36 @@
 <a href="https://turbo.build/repo">Turborepo</a> (JavaScript)
 </p>
 
-**Source**
+## Features
 
-Requires [rust](https://www.rust-lang.org/tools/install).
+- **Recursive Search**: Scans directories and subdirectories for recognized project structures.
+- **Space Savings**: Estimates the amount of space that can be freed by deleting redundant files.
+
+## Installation
+
+To install **rmrfrs**, simply clone the repository and follow the instructions below:
 
 ```sh
-git clone https://github.com/trinhminhtriet/rmrfrs.git
+git clone https://github.com/yourusername/rmrfrs.git
 cd rmrfrs
-cargo install --path rmrfrs
-cargo install --path rmrfrs-ui
+rmrfrs --help
+rmrfrs code/my_project code/my_project_2
+rmrfrs --older 3M
+rmrfrs -o3M
 ```
 
 ## Usage
 
-> **Warning**
->
-> `rmrfrs` is [_essentially_] `rm -rf` with a prompt. Use at your own discretion. Always have a backup of your projects.
-
-### Command Line Interface
+Run **rmrfrs** with the following command to start cleaning your filesystem:
 
 ```sh
-rmrfrs --help
-rmrfrs code/my_project code/my_project_2
-rmrfrs --older 3M # only projects with last modified > 3 months
-rmrfrs -o3M # shorthand
+./rmrfrs [options] [path]
 ```
 
-The output binaries will be located in `target/debug/` or `target/release/` per [Cargo](https://doc.rust-lang.org/cargo/index.html) defaults.
+## Contributing
+
+We welcome contributions! Please fork the repository and submit a pull request for any enhancements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
