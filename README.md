@@ -49,6 +49,8 @@ git clone https://github.com/yourusername/rmrfrs.git
 cd rmrfrs
 cargo build --release
 
+mv target/release/rmrfrs /usr/local/bin/
+
 rmrfrs --help
 rmrfrs code/my_project code/my_project_2
 rmrfrs --older 3M
