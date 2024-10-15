@@ -47,6 +47,8 @@ To install **rmrfrs**, simply clone the repository and follow the instructions b
 ```sh
 git clone https://github.com/yourusername/rmrfrs.git
 cd rmrfrs
+cargo build --release
+
 rmrfrs --help
 rmrfrs code/my_project code/my_project_2
 rmrfrs --older 3M
