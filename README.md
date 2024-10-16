@@ -42,19 +42,23 @@
 
 ## Installation
 
-To install **rmrfrs**, simply clone the repository and follow the instructions below:
+To install **rmrfrs**, simply clone the repository and follow the instructions below:  
 
-```sh
-git clone https://github.com/yourusername/rmrfrs.git
+```bash
+git clone https://github.com/trinhminhtriet/rmrfrs.git
 cd rmrfrs
-cargo build --release
 
-mv target/release/rmrfrs /usr/local/bin/
+cargo install --path .
 
 rmrfrs --help
 rmrfrs code/my_project code/my_project_2
 rmrfrs --older 3M
 rmrfrs -o3M
+```
+Optionally, you can add `~/.cargo/bin` to your PATH if it's not already there   
+```bash
+echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Usage
