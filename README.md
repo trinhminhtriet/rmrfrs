@@ -56,6 +56,12 @@ rmrfrs --older 3M
 rmrfrs -o3M
 ```
 
+Running the belove command will globally install the rmrfrs binary.
+
+```bash
+cargo install rmrfrs
+```
+
 Optionally, you can add `~/.cargo/bin` to your PATH if it's not already there
 
 ```bash
