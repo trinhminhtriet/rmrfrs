@@ -71,7 +71,7 @@ Run **rmrfrs** with the following command to start cleaning your filesystem:
 ./rmrfrs [options] [path]
 ```
 
-## 🤔 How to contribute
+## 🤝 How to contribute
 
 We welcome contributions!
 
