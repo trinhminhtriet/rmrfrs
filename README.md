@@ -35,14 +35,14 @@
 <a href="https://turbo.build/repo">Turborepo</a> (JavaScript)
 </p>
 
-## Features
+## ✨ Features
 
 - **Recursive Search**: Scans directories and subdirectories for recognized project structures.
 - **Space Savings**: Estimates the amount of space that can be freed by deleting redundant files.
 
-## Installation
+## 🚀 Installation
 
-To install **rmrfrs**, simply clone the repository and follow the instructions below:  
+To install **rmrfrs**, simply clone the repository and follow the instructions below:
 
 ```bash
 git clone https://github.com/trinhminhtriet/rmrfrs.git
@@ -55,13 +55,15 @@ rmrfrs code/my_project code/my_project_2
 rmrfrs --older 3M
 rmrfrs -o3M
 ```
-Optionally, you can add `~/.cargo/bin` to your PATH if it's not already there   
+
+Optionally, you can add `~/.cargo/bin` to your PATH if it's not already there
+
 ```bash
 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## Usage
+## 💡 Usage
 
 Run **rmrfrs** with the following command to start cleaning your filesystem:
 
@@ -69,10 +71,17 @@ Run **rmrfrs** with the following command to start cleaning your filesystem:
 ./rmrfrs [options] [path]
 ```
 
-## Contributing
+## 🤔 How to contribute
 
-We welcome contributions! Please fork the repository and submit a pull request for any enhancements or bug fixes.
+We welcome contributions!
 
-## License
+- Fork this repository;
+- Create a branch with your feature: `git checkout -b my-feature`;
+- Commit your changes: `git commit -m "feat: my new feature"`;
+- Push to your branch: `git push origin my-feature`.
+
+Once your pull request has been merged, you can delete your branch.
+
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
