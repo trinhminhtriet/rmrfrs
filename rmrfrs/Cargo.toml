@@ -1,6 +1,6 @@
 [package]
 name = "rmrfrs"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
 description = """
 rmrfrs is a filesystem cleaning tool that scans directories for known project structures, 
