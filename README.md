@@ -1,5 +1,13 @@
 # 🧹 rmrfrs
 
+```text
+                         __            
+ _ __  _ __ ___   _ __  / _| _ __  ___ 
+| '__|| '_ ` _ \ | '__|| |_ | '__|/ __|
+| |   | | | | | || |   |  _|| |   \__ \
+|_|   |_| |_| |_||_|   |_|  |_|   |___/
+```
+
 🧹 rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
 
 <p align="center">
