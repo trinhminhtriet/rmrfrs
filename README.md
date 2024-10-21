@@ -56,7 +56,7 @@ rmrfrs --older 3M
 rmrfrs -o3M
 ```
 
-Running the belove command will globally install the rmrfrs binary.
+Running the below command will globally install the rmrfrs binary.
 
 ```bash
 cargo install rmrfrs
