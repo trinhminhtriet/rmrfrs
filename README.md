@@ -99,3 +99,17 @@ Once your pull request has been merged, you can delete your branch.
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🗑️ Uninstallation
+
+Running the below command will globally uninstall the `rmrfrs` binary.
+
+```bash
+cargo uninstall rmrfrs
+```
+
+Remove the project repo
+
+```bash
+rm -rf /path/to/git/clone/rmrfrs
+```
