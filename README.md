@@ -1,9 +1,9 @@
 # 🧹 rmrfrs
 
 ```text
-                         __            
- _ __  _ __ ___   _ __  / _| _ __  ___ 
-| '__|| '_ ` _ \ | '__|| |_ | '__|/ __|
+                         __
+ _ __  _ __ ___   _ __  / _| _ __  ___
+| |__|| |_ ` _ \ | |__|| |_ | |__|/ __|
 | |   | | | | | || |   |  _|| |   \__ \
 |_|   |_| |_| |_||_|   |_|  |_|   |___/
 ```
@@ -57,11 +57,6 @@ git clone https://github.com/trinhminhtriet/rmrfrs.git
 cd rmrfrs
 
 cargo install --path .
-
-rmrfrs --help
-rmrfrs code/my_project code/my_project_2
-rmrfrs --older 3M
-rmrfrs -o3M
 ```
 
 Running the below command will globally install the `rmrfrs` binary.
@@ -83,6 +78,25 @@ Run **rmrfrs** with the following command to start cleaning your filesystem:
 
 ```sh
 ./rmrfrs [options] [path]
+
+rmrfrs --help
+rmrfrs code/my_project code/my_project_2
+rmrfrs --older 3M
+rmrfrs -o3M
+```
+
+## 🗑️ Uninstallation
+
+Running the below command will globally uninstall the `rmrfrs` binary.
+
+```bash
+cargo uninstall rmrfrs
+```
+
+Remove the project repo
+
+```bash
+rm -rf /path/to/git/clone/rmrfrs
 ```
 
 ## 🤝 How to contribute
@@ -99,17 +113,3 @@ Once your pull request has been merged, you can delete your branch.
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🗑️ Uninstallation
-
-Running the below command will globally uninstall the `rmrfrs` binary.
-
-```bash
-cargo uninstall rmrfrs
-```
-
-Remove the project repo
-
-```bash
-rm -rf /path/to/git/clone/rmrfrs
-```
