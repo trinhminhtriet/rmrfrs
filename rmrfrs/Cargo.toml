@@ -1,13 +1,11 @@
 [package]
 name = "rmrfrs"
-version = "0.8.2"
+version = "0.8.3"
 authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
 description = """
-rmrfrs is a filesystem cleaning tool that scans directories for known project structures, 
-identifying unnecessary files to show potential space savings.
+rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.
 """
-documentation = "https://github.com/trinhminhtriet/rmrfrs"
-homepage = "https://github.com/trinhminhtriet/rmrfrs"
+homepage = "https://trinhminhtriet.com"
 repository = "https://github.com/trinhminhtriet/rmrfrs"
 readme = "../README.md"
 categories = ["command-line-utilities"]

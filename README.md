@@ -76,10 +76,31 @@ source ~/.bashrc
 
 Run **rmrfrs** with the following command to start cleaning your filesystem:
 
-```sh
-./rmrfrs [options] [path]
-
+```text
 rmrfrs --help
+
+rmrfrs recursively cleans project directories
+
+Usage: rmrfrs [OPTIONS] [DIRS]...
+
+Arguments:
+  [DIRS]...  The directories to examine. Current directory will be used if DIRS is omitted
+
+Options:
+  -I, --ignored-dirs <IGNORED_DIRS>  Directories to ignore. Will also prevent recursive traversal within
+  -q, --quiet...                     Quiet mode. Won't output to the terminal. -qq prevents all output
+  -a, --all                          Clean all found projects without confirmation
+  -L, --follow-symlinks              Follow symbolic links
+  -s, --same-filesystem              Restrict directory traversal to the root filesystem
+  -o, --older <OLDER>                Only directories with a file last modified n units of time ago will be looked at. Ex: 20d. Units are m: minutes, h: hours, d: days, w: weeks, M: months and y: years [default: 0d]
+      --completions <GENERATOR>      Generates completions for the specified shell [possible values: bash, elvish, fish, powershell, zsh]
+  -d, --default                      If there is no input, defaults to yes
+  -h, --help                         Print help (see more with '--help')
+```
+
+Ex:
+
+```bash
 rmrfrs code/my_project code/my_project_2
 rmrfrs --older 3M
 rmrfrs -o3M
