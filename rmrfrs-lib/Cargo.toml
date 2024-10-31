@@ -1,6 +1,6 @@
 [package]
 name = "rmrfrs-lib"
-version = "0.8.0"
+version = "0.8.5"
 authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
 edition = "2021"
 description = "Shared code lib for rmrfrs and rmrfrs-ui."
