@@ -1,6 +1,6 @@
 [package]
 name = "rmrfrs"
-version = "0.8.4"
+version = "0.8.5"
 authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
 description = """
 rmrfrs is a powerful filesystem cleaning tool designed to optimize storage by identifying and removing unnecessary files within known project structures.

@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: rmrfrs
+            asset_name: rmrfrs-linux-gnu-amd64
+          - os: windows-latest
+            artifact_name: rmrfrs.exe
+            asset_name: rmrfrs-windows-amd64.exe
+          - os: macos-latest
+            artifact_name: rmrfrs
+            asset_name: rmrfrs-darwin-amd64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Build release
+        run: cargo build --release --locked
+      - name: Set prerelease flag (non-Windows)
+        if: runner.os != 'Windows'
+        run: |
+          if [ $(echo ${{ github.ref }} | grep "rc") ]; then
+            echo "PRERELEASE=true" >> $GITHUB_ENV
+            echo "PRERELEASE=true"
+          else
+            echo "PRERELEASE=false" >> $GITHUB_ENV
+            echo "PRERELEASE=false"
+          fi
+          echo $PRERELEASE
+          VERSION=$(echo ${{ github.ref }} | sed 's/refs\/tags\///g')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION"
+      - name: Set prerelease flag (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $full = "${{ github.ref }}"
+
+          if ( $full -like '*rc*' ) {
+            echo "PRERELEASE=true" >> $env:GITHUB_ENV
+            echo "PRERELEASE=true"
+          } else {
+            echo "PRERELEASE=false" >> $env:GITHUB_ENV
+            echo "PRERELEASE=false"
+          }
+
+          $trimmed = $full -replace 'refs/tags/',''
+          echo "VERSION=$trimmed" >> $env:GITHUB_ENV
+          echo "VERSION=$trimmed"
+      - name: Upload release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          file: target/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
+          prerelease: ${{ env.PRERELEASE }}
+          release_name: "rmrfrs ${{ env.VERSION }}"
+          body: "Please refer to **[CHANGELOG.md](https://github.com/trinhminhtriet/rmrfrs/blob/master/CHANGELOG.md)** for information on this release."
