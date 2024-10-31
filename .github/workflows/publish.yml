@@ -24,5 +24,8 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Publish rmrfrs-lib to crates.io
+        run: cargo publish --manifest-path rmrfrs-lib/Cargo.toml --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
       - name: Publish rmrfrs to crates.io
-        run: cargo publish --manifest-path Cargo.toml --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --manifest-path rmrfrs/Cargo.toml --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
