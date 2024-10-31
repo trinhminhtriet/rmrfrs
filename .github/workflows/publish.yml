@@ -29,3 +29,6 @@ jobs:
 
       - name: Publish rmrfrs to crates.io
         run: cargo publish --manifest-path rmrfrs/Cargo.toml --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+      - name: Publish rmrfrs-ui to crates.io
+        run: cargo publish --manifest-path rmrfrs-ui/Cargo.toml --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
