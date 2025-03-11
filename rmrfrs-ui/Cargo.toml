@@ -1,6 +1,6 @@
 [package]
 name = "rmrfrs-ui"
-version = "0.8.5"
+version = "0.8.7"
 authors = ["Triet Trinh <contact@trinhminhtriet.com>"]
 description = """
 rmrfrs-ui is a filesystem cleaning tool that recursively searches directories
