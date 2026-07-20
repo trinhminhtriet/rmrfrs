@@ -345,72 +345,66 @@ impl Iterator for ProjectIter {
                 self.it.skip_current_dir();
                 continue;
             }
-            let rd = match entry.path().read_dir() {
+            let project_type = match detect_project_type(entry.path()) {
                 Err(e) => return Some(Err(Red::IOError(e))),
-                Ok(rd) => rd,
+                Ok(None) => continue,
+                Ok(Some(project_type)) => project_type,
             };
-            // intentionally ignoring errors while iterating the ReadDir
-            // can't return them because we'll lose the context of where we are
-            for dir_entry in rd
-                .filter_map(|rd| rd.ok())
-                .filter(|de| de.file_type().map(|ft| ft.is_file()).unwrap_or(false))
-                .map(|de| de.file_name())
-            {
-                let file_name = match dir_entry.to_str() {
-                    None => continue,
-                    Some(file_name) => file_name,
-                };
-                let p_type = match file_name {
-                    FILE_CARGO_TOML => Some(ProjectType::Cargo),
-                    FILE_PACKAGE_JSON => Some(ProjectType::Node),
-                    FILE_ASSEMBLY_CSHARP => Some(ProjectType::Unity),
-                    FILE_STACK_HASKELL => Some(ProjectType::Stack),
-                    FILE_SBT_BUILD => Some(ProjectType::SBT),
-                    FILE_MVN_BUILD => Some(ProjectType::Maven),
-                    FILE_CMAKE_BUILD => Some(ProjectType::CMake),
-                    FILE_COMPOSER_JSON => Some(ProjectType::Composer),
-                    FILE_PUBSPEC_YAML => Some(ProjectType::Pub),
-                    FILE_PIXI_PACKAGE => Some(ProjectType::Pixi),
-                    FILE_ELIXIR_MIX => Some(ProjectType::Elixir),
-                    FILE_SWIFT_PACKAGE => Some(ProjectType::Swift),
-                    FILE_BUILD_GRADLE => Some(ProjectType::Gradle),
-                    FILE_BUILD_GRADLE_KTS => Some(ProjectType::Gradle),
-                    FILE_BUILD_ZIG => Some(ProjectType::Zig),
-                    FILE_GODOT_4_PROJECT => Some(ProjectType::Godot4),
-                    FILE_PROJECT_TURBOREPO => Some(ProjectType::Turborepo),
-                    file_name if file_name.ends_with(FILE_UNREAL_SUFFIX) => {
-                        Some(ProjectType::Unreal)
-                    }
-                    file_name if file_name.ends_with(FILE_JUPYTER_SUFFIX) => {
-                        Some(ProjectType::Jupyter)
-                    }
-                    file_name if file_name.ends_with(FILE_PYTHON_SUFFIX) => {
-                        Some(ProjectType::Python)
-                    }
-                    file_name
-                        if file_name.ends_with(FILE_CSPROJ_SUFFIX)
-                            || file_name.ends_with(FILE_FSPROJ_SUFFIX) =>
-                    {
-                        if dir_contains_file(entry.path(), FILE_GODOT_4_PROJECT) {
-                            Some(ProjectType::Godot4)
-                        } else if dir_contains_file(entry.path(), FILE_ASSEMBLY_CSHARP) {
-                            Some(ProjectType::Unity)
-                        } else {
-                            Some(ProjectType::Dotnet)
-                        }
-                    }
-                    _ => None,
-                };
-                if let Some(project_type) = p_type {
-                    self.it.skip_current_dir();
-                    return Some(Ok(Project {
-                        project_type,
-                        path: entry.path().to_path_buf(),
-                    }));
-                }
-            }
+            self.it.skip_current_dir();
+            return Some(Ok(Project {
+                project_type,
+                path: entry.path().to_path_buf(),
+            }));
         }
     }
+}
+
+fn detect_project_type(path: &Path) -> Result<Option<ProjectType>, std::io::Error> {
+    let entries = path.read_dir()?;
+
+    // Individual entry errors are ignored so one unreadable marker does not hide
+    // other valid project markers in the same directory.
+    Ok(entries
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.file_type().is_ok_and(|file_type| file_type.is_file()))
+        .find_map(|entry| {
+            let file_name = entry.file_name();
+            let file_name = file_name.to_str()?;
+            match file_name {
+                FILE_CARGO_TOML => Some(ProjectType::Cargo),
+                FILE_PACKAGE_JSON => Some(ProjectType::Node),
+                FILE_ASSEMBLY_CSHARP => Some(ProjectType::Unity),
+                FILE_STACK_HASKELL => Some(ProjectType::Stack),
+                FILE_SBT_BUILD => Some(ProjectType::SBT),
+                FILE_MVN_BUILD => Some(ProjectType::Maven),
+                FILE_CMAKE_BUILD => Some(ProjectType::CMake),
+                FILE_COMPOSER_JSON => Some(ProjectType::Composer),
+                FILE_PUBSPEC_YAML => Some(ProjectType::Pub),
+                FILE_PIXI_PACKAGE => Some(ProjectType::Pixi),
+                FILE_ELIXIR_MIX => Some(ProjectType::Elixir),
+                FILE_SWIFT_PACKAGE => Some(ProjectType::Swift),
+                FILE_BUILD_GRADLE | FILE_BUILD_GRADLE_KTS => Some(ProjectType::Gradle),
+                FILE_BUILD_ZIG => Some(ProjectType::Zig),
+                FILE_GODOT_4_PROJECT => Some(ProjectType::Godot4),
+                FILE_PROJECT_TURBOREPO => Some(ProjectType::Turborepo),
+                file_name if file_name.ends_with(FILE_UNREAL_SUFFIX) => Some(ProjectType::Unreal),
+                file_name if file_name.ends_with(FILE_JUPYTER_SUFFIX) => Some(ProjectType::Jupyter),
+                file_name if file_name.ends_with(FILE_PYTHON_SUFFIX) => Some(ProjectType::Python),
+                file_name
+                    if file_name.ends_with(FILE_CSPROJ_SUFFIX)
+                        || file_name.ends_with(FILE_FSPROJ_SUFFIX) =>
+                {
+                    if dir_contains_file(path, FILE_GODOT_4_PROJECT) {
+                        Some(ProjectType::Godot4)
+                    } else if dir_contains_file(path, FILE_ASSEMBLY_CSHARP) {
+                        Some(ProjectType::Unity)
+                    } else {
+                        Some(ProjectType::Dotnet)
+                    }
+                }
+                _ => None,
+            }
+        }))
 }
 
 fn dir_contains_file(path: &Path, file: &str) -> bool {
@@ -478,35 +472,10 @@ pub fn pretty_size(size: u64) -> String {
 }
 
 pub fn clean(project_path: &str) -> Result<(), Box<dyn error::Error>> {
-    let project = fs::read_dir(project_path)?
-        .filter_map(|rd| rd.ok())
-        .find_map(|dir_entry| {
-            let file_name = dir_entry.file_name().into_string().ok()?;
-            let p_type = match file_name.as_str() {
-                FILE_CARGO_TOML => Some(ProjectType::Cargo),
-                FILE_PACKAGE_JSON => Some(ProjectType::Node),
-                FILE_ASSEMBLY_CSHARP => Some(ProjectType::Unity),
-                FILE_STACK_HASKELL => Some(ProjectType::Stack),
-                FILE_SBT_BUILD => Some(ProjectType::SBT),
-                FILE_MVN_BUILD => Some(ProjectType::Maven),
-                FILE_CMAKE_BUILD => Some(ProjectType::CMake),
-                FILE_COMPOSER_JSON => Some(ProjectType::Composer),
-                FILE_PUBSPEC_YAML => Some(ProjectType::Pub),
-                FILE_PIXI_PACKAGE => Some(ProjectType::Pixi),
-                FILE_ELIXIR_MIX => Some(ProjectType::Elixir),
-                FILE_SWIFT_PACKAGE => Some(ProjectType::Swift),
-                FILE_BUILD_ZIG => Some(ProjectType::Zig),
-                FILE_GODOT_4_PROJECT => Some(ProjectType::Godot4),
-                _ => None,
-            };
-            if let Some(project_type) = p_type {
-                return Some(Project {
-                    project_type,
-                    path: project_path.into(),
-                });
-            }
-            None
-        });
+    let project = detect_project_type(Path::new(project_path))?.map(|project_type| Project {
+        project_type,
+        path: project_path.into(),
+    });
 
     if let Some(project) = project {
         for artifact_dir in project
@@ -537,7 +506,21 @@ pub fn path_canonicalise(
 
 #[cfg(test)]
 mod tests {
-    use super::print_elapsed;
+    use super::{clean, detect_project_type, print_elapsed};
+    use std::{fs, path::PathBuf};
+
+    fn temporary_project(name: &str) -> PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "rmrfrs-{name}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir(&path).unwrap();
+        path
+    }
 
     #[test]
     fn elapsed() {
@@ -576,5 +559,60 @@ mod tests {
         assert_eq!(print_elapsed(2419200 * 12), "12 months ago");
         assert_eq!(print_elapsed(2419200 * 25), "25 months ago");
         assert_eq!(print_elapsed(2419200 * 48), "4 years ago");
+    }
+
+    #[test]
+    fn detects_every_supported_project_marker() {
+        let markers = [
+            ("Cargo.toml", "Cargo"),
+            ("package.json", "Node"),
+            ("Assembly-CSharp.csproj", "Unity"),
+            ("stack.yaml", "Stack"),
+            ("build.sbt", "SBT"),
+            ("pom.xml", "Maven"),
+            ("build.gradle", "Gradle"),
+            ("build.gradle.kts", "Gradle"),
+            ("CMakeLists.txt", "CMake"),
+            ("sample.uproject", "Unreal"),
+            ("notebook.ipynb", "Jupyter"),
+            ("main.py", "Python"),
+            ("pixi.toml", "Pixi"),
+            ("composer.json", "Composer"),
+            ("pubspec.yaml", "Pub"),
+            ("mix.exs", "Elixir"),
+            ("Package.swift", "Swift"),
+            ("build.zig", "Zig"),
+            ("project.godot", "Godot 4.x"),
+            ("sample.csproj", ".NET"),
+            ("sample.fsproj", ".NET"),
+            ("turbo.json", "Turborepo"),
+        ];
+
+        for (marker, expected_type) in markers {
+            let project_path = temporary_project(expected_type);
+            fs::write(project_path.join(marker), []).unwrap();
+
+            let project_type = detect_project_type(&project_path).unwrap().unwrap();
+            let project = super::Project {
+                project_type,
+                path: project_path.clone(),
+            };
+            assert_eq!(project.type_name(), expected_type, "marker: {marker}");
+
+            fs::remove_dir_all(project_path).unwrap();
+        }
+    }
+
+    #[test]
+    fn public_clean_supports_gradle_projects() {
+        let project_path = temporary_project("clean-gradle");
+        fs::write(project_path.join("build.gradle.kts"), []).unwrap();
+        fs::create_dir(project_path.join("build")).unwrap();
+        fs::write(project_path.join("build/output.bin"), b"artifact").unwrap();
+
+        clean(project_path.to_str().unwrap()).unwrap();
+
+        assert!(!project_path.join("build").exists());
+        fs::remove_dir_all(project_path).unwrap();
     }
 }
